@@ -76,6 +76,7 @@ def test_invoke() -> None:
     llm = AI21LLM(
         model="j2-ultra",
     )
+    llm.generate_prompt()
 
     result = llm.invoke("I'm Pickle Rick", config=dict(tags=["foo"]))
     assert isinstance(result, str)
