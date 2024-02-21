@@ -14,6 +14,8 @@ from langchain_core.runnables import RunnableConfig, RunnableSerializable
 
 TSMModelInput = Union[StringPromptValue, str]
 
+_ANSWER_NOT_IN_CONTEXT_RESPONSE = "Answer not in context"
+
 
 class ContextualAnswerInput(TypedDict):
     context: str
@@ -59,6 +61,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         self,
         input: ContextualAnswerInput,
         config: Optional[RunnableConfig] = None,
+        response_if_no_answer_found: str = _ANSWER_NOT_IN_CONTEXT_RESPONSE,
         **kwargs: Any,
     ) -> str:
         converted_input = self._convert_input(input)
@@ -66,4 +69,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
             context=converted_input["context"], question=converted_input["question"]
         )
 
-        return response.answer
+        if response.answer_in_context:
+            return response.answer
+
+        return response_if_no_answer_found
