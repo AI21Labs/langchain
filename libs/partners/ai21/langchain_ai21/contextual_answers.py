@@ -12,7 +12,6 @@ from langchain_core.documents import Document
 from langchain_core.prompt_values import StringPromptValue
 from langchain_core.runnables import RunnableConfig, RunnableSerializable
 
-TSMModelInput = Union[StringPromptValue, str]
 
 _ANSWER_NOT_IN_CONTEXT_RESPONSE = "Answer not in context"
 
@@ -39,8 +38,9 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         return str
 
     def _convert_input(self, input: ContextualAnswerInput) -> ContextualAnswerInput:
-        # if input.get("context") is None:
-        #     raise ValueError("Input must contain a 'context' field")
+        if input.get("context") is None or input.get("question") is None:
+            raise ValueError(f"Input must contain a 'context' and 'question' field. Got {input}")
+
         context_input = input["context"]
 
         if isinstance(context_input, list):
