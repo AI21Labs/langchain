@@ -43,7 +43,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
 
         context_input = input["context"]
 
-        if isinstance(context_input, list):
+        if isinstance(context_input, list) and context_input:
             docs = [
                 item.page_content if isinstance(item, Document) else item
                 for item in context_input
