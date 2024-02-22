@@ -40,15 +40,15 @@ def test_invoke__on_bad_input(input: Dict[str, str]):
         ({"context": 1242, "question": "What is the capital of France?"}),
     ],
 )
-def test_invoke__on_bad_input(input: Dict[str, str]):
+def test_invoke__on_context_bad_input(input: Dict[str, str]):
     tsm = AI21ContextualAnswers()
 
     with pytest.raises(ValueError) as error:
         tsm.invoke(input)
 
     assert (
-        error.value.args[0]
-        == f"Expected input to be a list of strings or Documents. Received {type(input)}"
+        error.value.args[0] == f"Expected input to be a list of strings or Documents."
+        f" Received {type(input)}"
     )
 
 
@@ -68,7 +68,7 @@ def test_invoke__on_bad_input(input: Dict[str, str]):
         ),
         (
             {
-                "context": [Document(page_content="Paris is the capital of france")],
+                "context": [Document(page_content="Paris is the " "capital of france")],
                 "question": "What is the capital of France?",
             }
         ),

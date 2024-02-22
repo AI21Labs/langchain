@@ -37,7 +37,9 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
 
     def _convert_input(self, input: ContextualAnswerInput) -> ContextualAnswerInput:
         if input.get("context") is None or input.get("question") is None:
-            raise ValueError(f"Input must contain a 'context' and 'question' field. Got {input}")
+            raise ValueError(
+                f"Input must contain a 'context' and 'question' field. Got {input}"
+            )
 
         context_input = input["context"]
 
@@ -52,7 +54,8 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
             return input
 
         raise ValueError(
-            f"Expected input to be a list of strings or Documents. Received {type(input)}"
+            f"Expected input to be a list of strings or Documents."
+            f" Received {type(input)}"
         )
 
     def invoke(
