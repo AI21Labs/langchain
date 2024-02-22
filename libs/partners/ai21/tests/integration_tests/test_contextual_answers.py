@@ -1,4 +1,3 @@
-from langchain_community.vectorstores.faiss import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import Runnable, RunnablePassthrough
 
@@ -61,6 +60,8 @@ def test_invoke_when_used_in_a_simple_chain_with_no_vectorstore() -> None:
 
 
 def test_invoke_when_used_in_a_chain_with_vectorstore() -> None:
+    from langchain_community.vectorstores.faiss import FAISS
+
     embeddings = AI21Embeddings()
     faiss = FAISS.from_texts(texts=[context], embedding=embeddings)
     retriever = faiss.as_retriever()
