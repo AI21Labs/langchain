@@ -1,9 +1,9 @@
 from typing import Dict
 
 import pytest
+from langchain_core.documents import Document
 
 from langchain_ai21 import AI21ContextualAnswers
-from langchain_core.documents import Document
 
 
 @pytest.mark.parametrize(

@@ -1,17 +1,15 @@
 from typing import (
-    Optional,
-    Union,
     Any,
+    Optional,
     Type,
     TypeAlias,
     TypedDict,
 )
 
-from langchain_ai21.ai21_base import AI21Base
 from langchain_core.documents import Document
-from langchain_core.prompt_values import StringPromptValue
 from langchain_core.runnables import RunnableConfig, RunnableSerializable
 
+from langchain_ai21.ai21_base import AI21Base
 
 _ANSWER_NOT_IN_CONTEXT_RESPONSE = "Answer not in context"
 
