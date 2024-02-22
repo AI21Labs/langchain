@@ -1,4 +1,3 @@
-import os
 from contextlib import contextmanager
 from typing import Generator
 from unittest.mock import Mock
