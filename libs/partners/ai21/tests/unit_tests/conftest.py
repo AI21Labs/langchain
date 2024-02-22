@@ -4,7 +4,7 @@ from typing import Generator
 from unittest.mock import Mock
 
 import pytest
-from ai21 import AI21Client
+from ai21 import AI21Client, AI21EnvConfig
 from ai21.models import (
     ChatOutput,
     ChatResponse,
@@ -44,7 +44,7 @@ def mocked_completion_response(mocker: MockerFixture) -> Mock:
         Completion(
             data=CompletionData(text="test", tokens=[]),
             finish_reason=CompletionFinishReason(reason=None, length=None),
-        )
+   )
     ]
     return mocked_response
 
@@ -84,8 +84,10 @@ def temporarily_unset_api_key() -> Generator:
     """
     Unset and set environment key for testing purpose for when an API KEY is not set
     """
-    api_key = os.environ.pop("API_KEY", None)
+    api_key = os.environ.pop("AI21_API_KEY", None)
+    AI21EnvConfig.api_key = None
     yield
 
     if api_key is not None:
-        os.environ["API_KEY"] = api_key
+        os.environ["AI21_API_KEY"] = api_key
+        AI21EnvConfig.api_key = api_key
