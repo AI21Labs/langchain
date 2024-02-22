@@ -3,6 +3,7 @@ from langchain_core.documents import Document
 
 from langchain_ai21 import AI21ContextualAnswers
 from langchain_ai21.contextual_answers import ContextualAnswerInput
+from tests.unit_tests.conftest import DUMMY_API_KEY
 
 
 @pytest.mark.parametrize(
@@ -17,7 +18,7 @@ from langchain_ai21.contextual_answers import ContextualAnswerInput
     ],
 )
 def test_invoke__on_bad_input(input: ContextualAnswerInput) -> None:
-    tsm = AI21ContextualAnswers()
+    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY)
 
     with pytest.raises(ValueError) as error:
         tsm.invoke(input)
@@ -40,7 +41,7 @@ def test_invoke__on_bad_input(input: ContextualAnswerInput) -> None:
     ],
 )
 def test_invoke__on_context_bad_input(input: ContextualAnswerInput) -> None:
-    tsm = AI21ContextualAnswers()
+    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY)
 
     with pytest.raises(ValueError) as error:
         tsm.invoke(input)
@@ -80,7 +81,7 @@ def test_invoke__on_context_bad_input(input: ContextualAnswerInput) -> None:
     ],
 )
 def test_invoke__on_good_input(input: ContextualAnswerInput) -> None:
-    tsm = AI21ContextualAnswers()
+    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY)
 
     response = tsm.invoke(input)
     assert isinstance(response, str)
