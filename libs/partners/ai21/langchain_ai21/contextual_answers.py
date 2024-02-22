@@ -2,12 +2,12 @@ from typing import (
     Any,
     Optional,
     Type,
-    TypeAlias,
     TypedDict,
 )
 
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableConfig, RunnableSerializable
+from typing_extensions import TypeAlias
 
 from langchain_ai21.ai21_base import AI21Base
 
