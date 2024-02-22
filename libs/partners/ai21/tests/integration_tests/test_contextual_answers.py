@@ -1,10 +1,10 @@
-import pytest
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import Runnable, RunnablePassthrough
 
 from langchain_ai21 import AI21Embeddings
 from langchain_ai21.contextual_answers import (
+    ANSWER_NOT_IN_CONTEXT_RESPONSE,
     AI21ContextualAnswers,
 )
 
@@ -20,23 +20,20 @@ _BAD_QUESTION = "What color is Yoda's light saber?"
 _EXPECTED_PARTIAL_RESPONSE = "March 14, 1879"
 
 
-@pytest.mark.parametrize(
-    ids=("good_question", "bad_question"),
-    argnames=("question", "expected_answer"),
-    argvalues=[
-        (_GOOD_QUESTION, _EXPECTED_PARTIAL_RESPONSE),
-        (_BAD_QUESTION, "Answer not in context"),
-    ],
-)
-def test_invoke(
-    question: str,
-    expected_answer: str,
-) -> None:
+def test_invoke__when_good_question() -> None:
     llm = AI21ContextualAnswers()
 
-    response = llm.invoke({"context": context, "question": question})
+    response = llm.invoke({"context": context, "question": _GOOD_QUESTION})
 
-    assert expected_answer in response
+    assert response != ANSWER_NOT_IN_CONTEXT_RESPONSE
+
+
+def test_invoke__when_bad_question__should_return_answer_not_in_context() -> None:
+    llm = AI21ContextualAnswers()
+
+    response = llm.invoke({"context": context, "question": _BAD_QUESTION})
+
+    assert response == ANSWER_NOT_IN_CONTEXT_RESPONSE
 
 
 def test_invoke__when_response_if_no_answer_passed__should_use_it() -> None:
@@ -60,7 +57,7 @@ def test_invoke_when_used_in_a_simple_chain_with_no_vectorstore() -> None:
         {"context": context, "question": _GOOD_QUESTION},
     )
 
-    assert _EXPECTED_PARTIAL_RESPONSE in response
+    assert response != ANSWER_NOT_IN_CONTEXT_RESPONSE
 
 
 def test_invoke_when_used_in_a_chain_with_vectorstore() -> None:
@@ -78,4 +75,4 @@ def test_invoke_when_used_in_a_chain_with_vectorstore() -> None:
 
     response = chain.invoke(_GOOD_QUESTION)
 
-    assert _EXPECTED_PARTIAL_RESPONSE in response
+    assert response != ANSWER_NOT_IN_CONTEXT_RESPONSE

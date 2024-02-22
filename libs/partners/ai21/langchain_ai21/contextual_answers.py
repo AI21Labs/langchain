@@ -11,7 +11,7 @@ from typing_extensions import TypeAlias
 
 from langchain_ai21.ai21_base import AI21Base
 
-_ANSWER_NOT_IN_CONTEXT_RESPONSE = "Answer not in context"
+ANSWER_NOT_IN_CONTEXT_RESPONSE = "Answer not in context"
 
 
 class ContextualAnswerInput(TypedDict):
@@ -62,7 +62,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         self,
         input: ContextualAnswerInput,
         config: Optional[RunnableConfig] = None,
-        response_if_no_answer_found: str = _ANSWER_NOT_IN_CONTEXT_RESPONSE,
+        response_if_no_answer_found: str = ANSWER_NOT_IN_CONTEXT_RESPONSE,
         **kwargs: Any,
     ) -> str:
         converted_input = self._convert_input(input)
