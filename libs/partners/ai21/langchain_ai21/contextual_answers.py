@@ -70,7 +70,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
             context=converted_input["context"], question=converted_input["question"]
         )
 
-        if response.answer_in_context:
+        if response.answer is not None:
             return response.answer
 
         return response_if_no_answer_found

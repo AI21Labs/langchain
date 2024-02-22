@@ -1,7 +1,7 @@
 import pytest
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import Runnable, RunnablePassthrough
 
 from langchain_ai21 import AI21Embeddings
 from langchain_ai21.contextual_answers import (
@@ -31,7 +31,7 @@ _EXPECTED_PARTIAL_RESPONSE = "March 14, 1879"
 def test_invoke(
     question: str,
     expected_answer: str,
-):
+) -> None:
     llm = AI21ContextualAnswers()
 
     response = llm.invoke({"context": context, "question": question})
@@ -39,7 +39,7 @@ def test_invoke(
     assert expected_answer in response
 
 
-def test_invoke__when_response_if_no_answer_passed__should_use_it():
+def test_invoke__when_response_if_no_answer_passed__should_use_it() -> None:
     response_if_no_answer_found = "This should be the response"
     llm = AI21ContextualAnswers()
 
@@ -51,10 +51,10 @@ def test_invoke__when_response_if_no_answer_passed__should_use_it():
     assert response == response_if_no_answer_found
 
 
-def test_invoke_when_used_in_a_simple_chain_with_no_vectorstore():
+def test_invoke_when_used_in_a_simple_chain_with_no_vectorstore() -> None:
     tsm = AI21ContextualAnswers()
 
-    chain = tsm | StrOutputParser()
+    chain: Runnable = tsm | StrOutputParser()
 
     response = chain.invoke(
         {"context": context, "question": _GOOD_QUESTION},
@@ -63,14 +63,14 @@ def test_invoke_when_used_in_a_simple_chain_with_no_vectorstore():
     assert _EXPECTED_PARTIAL_RESPONSE in response
 
 
-def test_invoke_when_used_in_a_chain_with_vectorstore():
+def test_invoke_when_used_in_a_chain_with_vectorstore() -> None:
     embeddings = AI21Embeddings()
     faiss = FAISS.from_texts(texts=[context], embedding=embeddings)
     retriever = faiss.as_retriever()
 
     tsm = AI21ContextualAnswers()
 
-    chain = (
+    chain: Runnable = (
         {"context": retriever, "question": RunnablePassthrough()}
         | tsm
         | StrOutputParser()
