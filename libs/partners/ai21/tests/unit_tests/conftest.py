@@ -85,12 +85,11 @@ def temporarily_unset_api_key() -> Generator:
     """
     Unset and set environment key for testing purpose for when an API KEY is not set
     """
-    api_key = os.environ.pop("AI21_API_KEY", None)
+    api_key = AI21EnvConfig.api_key
     AI21EnvConfig.api_key = None
     yield
 
     if api_key is not None:
-        os.environ["AI21_API_KEY"] = api_key
         AI21EnvConfig.api_key = api_key
 
 
