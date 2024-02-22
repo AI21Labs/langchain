@@ -44,7 +44,7 @@ def mocked_completion_response(mocker: MockerFixture) -> Mock:
         Completion(
             data=CompletionData(text="test", tokens=[]),
             finish_reason=CompletionFinishReason(reason=None, length=None),
-   )
+        )
     ]
     return mocked_response
 
