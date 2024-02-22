@@ -61,7 +61,7 @@ select = [
 disallow_untyped_defs = "True"
 
 [[tool.mypy.overrides]]
-module = "tests.test_contextual_answers"
+module = "ai21.tests.test_contextual_answers"
 ignore_missing_imports = true
 
 [tool.coverage.run]
