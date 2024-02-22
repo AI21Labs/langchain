@@ -14,7 +14,7 @@ from ai21.models import (
     CompletionsResponse,
     FinishReason,
     Penalty,
-    RoleType,
+    RoleType, AnswerResponse,
 )
 from pytest_mock import MockerFixture
 
@@ -91,3 +91,11 @@ def temporarily_unset_api_key() -> Generator:
     if api_key is not None:
         os.environ["AI21_API_KEY"] = api_key
         AI21EnvConfig.api_key = api_key
+
+@pytest.fixture
+def mock_client_with_contextual_answers(mocker: MockerFixture) -> Mock:
+    mock_client = mocker.MagicMock(spec=AI21Client)
+    mock_client.answer = mocker.MagicMock()
+    mock_client.answer.create.return_value = AnswerResponse(id="some_id", answer="some answer", answer_in_context=False)
+
+    return mock_client

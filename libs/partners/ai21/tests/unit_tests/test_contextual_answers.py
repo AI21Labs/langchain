@@ -17,8 +17,8 @@ from tests.unit_tests.conftest import DUMMY_API_KEY
         ({"context": "Paris is the capital of France"}),
     ],
 )
-def test_invoke__on_bad_input(input: ContextualAnswerInput) -> None:
-    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY)
+def test_invoke__on_bad_input(input: ContextualAnswerInput, mock_client_with_contextual_answers) -> None:
+    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY, client=mock_client_with_contextual_answers)
 
     with pytest.raises(ValueError) as error:
         tsm.invoke(input)
@@ -40,8 +40,8 @@ def test_invoke__on_bad_input(input: ContextualAnswerInput) -> None:
         ({"context": 1242, "question": "What is the capital of France?"}),
     ],
 )
-def test_invoke__on_context_bad_input(input: ContextualAnswerInput) -> None:
-    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY)
+def test_invoke__on_context_bad_input(input: ContextualAnswerInput, mock_client_with_contextual_answers) -> None:
+    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY, client=mock_client_with_contextual_answers)
 
     with pytest.raises(ValueError) as error:
         tsm.invoke(input)
@@ -80,8 +80,8 @@ def test_invoke__on_context_bad_input(input: ContextualAnswerInput) -> None:
         ),
     ],
 )
-def test_invoke__on_good_input(input: ContextualAnswerInput) -> None:
-    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY)
+def test_invoke__on_good_input(input: ContextualAnswerInput, mock_client_with_contextual_answers) -> None:
+    tsm = AI21ContextualAnswers(api_key=DUMMY_API_KEY, client=mock_client_with_contextual_answers)
 
     response = tsm.invoke(input)
     assert isinstance(response, str)
