@@ -1,9 +1,10 @@
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import Runnable
+
 from langchain_ai21.contextual_answers import (
     ANSWER_NOT_IN_CONTEXT_RESPONSE,
     AI21ContextualAnswers,
 )
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import Runnable
 
 context = """
 Albert Einstein German: 14 March 1879 – 18 April 1955) 
