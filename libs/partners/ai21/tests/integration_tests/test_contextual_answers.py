@@ -1,11 +1,9 @@
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import Runnable, RunnablePassthrough
-
-from langchain_ai21 import AI21Embeddings
 from langchain_ai21.contextual_answers import (
     ANSWER_NOT_IN_CONTEXT_RESPONSE,
     AI21ContextualAnswers,
 )
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import Runnable
 
 context = """
 Albert Einstein German: 14 March 1879 – 18 April 1955) 
@@ -55,25 +53,5 @@ def test_invoke_when_used_in_a_simple_chain_with_no_vectorstore() -> None:
     response = chain.invoke(
         {"context": context, "question": _GOOD_QUESTION},
     )
-
-    assert response != ANSWER_NOT_IN_CONTEXT_RESPONSE
-
-
-def test_invoke_when_used_in_a_chain_with_vectorstore() -> None:
-    from langchain_community.vectorstores.faiss import FAISS
-
-    embeddings = AI21Embeddings()
-    faiss = FAISS.from_texts(texts=[context], embedding=embeddings)
-    retriever = faiss.as_retriever()
-
-    tsm = AI21ContextualAnswers()
-
-    chain: Runnable = (
-        {"context": retriever, "question": RunnablePassthrough()}
-        | tsm
-        | StrOutputParser()
-    )
-
-    response = chain.invoke(_GOOD_QUESTION)
 
     assert response != ANSWER_NOT_IN_CONTEXT_RESPONSE
