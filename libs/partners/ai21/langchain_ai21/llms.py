@@ -7,6 +7,7 @@ from typing import (
 )
 
 from ai21.models import CompletionsResponse, Penalty
+from ai21.types import NOT_GIVEN, NotGiven
 from langchain_core.callbacks import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
@@ -50,18 +51,18 @@ class AI21LLM(BaseLLM, AI21Base):
     top_k_returns: int = 0
     """The number of top-scoring tokens to consider for each generation step."""
 
-    frequency_penalty: Optional[Penalty] = None
+    frequency_penalty: Penalty | NotGiven = NOT_GIVEN
     """A penalty applied to tokens that are frequently generated."""
 
-    presence_penalty: Optional[Penalty] = None
+    presence_penalty: Penalty | NotGiven = NOT_GIVEN
     """ A penalty applied to tokens that are already present in the prompt."""
 
-    count_penalty: Optional[Penalty] = None
+    count_penalty: Penalty | NotGiven = NOT_GIVEN
     """A penalty applied to tokens based on their frequency 
     in the generated responses."""
 
-    custom_model: Optional[str] = None
-    epoch: Optional[int] = None
+    custom_model: str | NotGiven = NOT_GIVEN
+    epoch: int | NotGiven = NOT_GIVEN
 
     class Config:
         """Configuration for this pydantic object."""
@@ -123,7 +124,7 @@ class AI21LLM(BaseLLM, AI21Base):
             top_p=self.top_p,
             top_k_return=self.top_k_returns,
             custom_model=self.custom_model,
-            stop_sequences=stop_sequences,
+            stop_sequences=stop_sequences or NOT_GIVEN,
             frequency_penalty=self.frequency_penalty,
             presence_penalty=self.presence_penalty,
             count_penalty=self.count_penalty,
