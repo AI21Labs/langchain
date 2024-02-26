@@ -6,7 +6,7 @@ from typing import (
 )
 
 from langchain_core.documents import Document
-from langchain_core.runnables import RunnableConfig, RunnableSerializable
+from langchain_core.runnables import RunnableConfig, RunnableSerializable, ensure_config
 from typing_extensions import TypeAlias
 
 from langchain_ai21.ai21_base import AI21Base
@@ -59,6 +59,12 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
             f" Received {type(input)}"
         )
 
+    def _call_contextual_answers_model(self, input: ContextualAnswerInput) -> str:
+        converted_input = self._convert_input(input)
+        return self.client.answer.create(
+            context=converted_input["context"], question=converted_input["question"]
+        ).answer
+
     def invoke(
         self,
         input: ContextualAnswerInput,
@@ -66,12 +72,15 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         response_if_no_answer_found: str = ANSWER_NOT_IN_CONTEXT_RESPONSE,
         **kwargs: Any,
     ) -> str:
-        converted_input = self._convert_input(input)
-        response = self.client.answer.create(
-            context=converted_input["context"], question=converted_input["question"]
+        config = ensure_config(config)
+        answer = self._call_with_config(
+            func=self._call_contextual_answers_model,
+            input=input,
+            config=config,
+            run_type="llm",
         )
 
-        if response.answer is None:
+        if answer is None:
             return response_if_no_answer_found
 
-        return response.answer
+        return answer

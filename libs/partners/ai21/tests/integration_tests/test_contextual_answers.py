@@ -1,3 +1,4 @@
+from langchain_core.globals import set_verbose
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import Runnable
 
@@ -21,7 +22,7 @@ _EXPECTED_PARTIAL_RESPONSE = "March 14, 1879"
 def test_invoke__when_good_question() -> None:
     llm = AI21ContextualAnswers()
 
-    response = llm.invoke({"context": context, "question": _GOOD_QUESTION})
+    response = llm.invoke({"context": context, "question": _GOOD_QUESTION},  config={"metadata": {"name": "I AM A TEST"}})
 
     assert response != ANSWER_NOT_IN_CONTEXT_RESPONSE
 
@@ -29,7 +30,7 @@ def test_invoke__when_good_question() -> None:
 def test_invoke__when_bad_question__should_return_answer_not_in_context() -> None:
     llm = AI21ContextualAnswers()
 
-    response = llm.invoke({"context": context, "question": _BAD_QUESTION})
+    response = llm.invoke(input={"context": context, "question": _BAD_QUESTION})
 
     assert response == ANSWER_NOT_IN_CONTEXT_RESPONSE
 
