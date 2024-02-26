@@ -12,11 +12,17 @@ from tests.unit_tests.conftest import DUMMY_API_KEY
     ids=[
         "when_no_context__should_raise_exception",
         "when_no_question__should_raise_exception",
+        "when_question_is_an_empty_string__should_raise_exception",
+        "when_context_is_an_empty_string__should_raise_exception",
+        "when_context_is_an_empty_list",
     ],
     argnames="input",
     argvalues=[
         ({"question": "What is the capital of France?"}),
         ({"context": "Paris is the capital of France"}),
+        ({"question": "", "context": "Paris is the capital of France"}),
+        ({"context": "", "question": "some question?"}),
+        ({"context": [], "question": "What is the capital of France?"}),
     ],
 )
 def test_invoke__on_bad_input(
@@ -38,12 +44,10 @@ def test_invoke__on_bad_input(
 
 @pytest.mark.parametrize(
     ids=[
-        "when_context_is_an_empty_list",
         "when_context_is_not_str_or_list_of_docs_or_str",
     ],
     argnames="input",
     argvalues=[
-        ({"context": [], "question": "What is the capital of France?"}),
         ({"context": 1242, "question": "What is the capital of France?"}),
     ],
 )
@@ -80,7 +84,7 @@ def test_invoke__on_context_bad_input(
         ),
         (
             {
-                "context": [Document(page_content="Paris is the " "capital of france")],
+                "context": [Document(page_content="Paris is the capital of france")],
                 "question": "What is the capital of France?",
             }
         ),

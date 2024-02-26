@@ -36,21 +36,22 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         return str
 
     def _convert_input(self, input: ContextualAnswerInput) -> ContextualAnswerInput:
-        if input.get("context") is None or input.get("question") is None:
+        context = input.get("context")
+        question = input.get("question")
+
+        if not context or not question:
             raise ValueError(
-                f"Input must contain a 'context' and 'question' field. Got {input}"
+                f"Input must contain a 'context' and 'question' fields. Got {input}"
             )
 
-        context_input = input["context"]
-
-        if isinstance(context_input, list) and context_input:
+        if isinstance(context, list):
             docs = [
                 item.page_content if isinstance(item, Document) else item
-                for item in context_input
+                for item in context
             ]
             return {"context": "\n".join(docs), "question": input["question"]}
 
-        if isinstance(context_input, str):
+        if isinstance(context, str):
             return input
 
         raise ValueError(
@@ -70,7 +71,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
             context=converted_input["context"], question=converted_input["question"]
         )
 
-        if response.answer is not None:
-            return response.answer
+        if response.answer is None:
+            return response_if_no_answer_found
 
-        return response_if_no_answer_found
+        return response.answer
