@@ -22,7 +22,10 @@ _EXPECTED_PARTIAL_RESPONSE = "March 14, 1879"
 def test_invoke__when_good_question() -> None:
     llm = AI21ContextualAnswers()
 
-    response = llm.invoke({"context": context, "question": _GOOD_QUESTION},  config={"metadata": {"name": "I AM A TEST"}})
+    response = llm.invoke(
+        {"context": context, "question": _GOOD_QUESTION},
+        config={"metadata": {"name": "I AM A TEST"}},
+    )
 
     assert response != ANSWER_NOT_IN_CONTEXT_RESPONSE
 

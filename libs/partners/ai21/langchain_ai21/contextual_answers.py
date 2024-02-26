@@ -3,19 +3,22 @@ from typing import (
     Optional,
     Type,
     TypedDict,
+    Tuple,
+    Union,
+    List,
 )
 
+from langchain_ai21.ai21_base import AI21Base
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableConfig, RunnableSerializable, ensure_config
-from typing_extensions import TypeAlias
-
-from langchain_ai21.ai21_base import AI21Base
 
 ANSWER_NOT_IN_CONTEXT_RESPONSE = "Answer not in context"
 
+ContextType = Union[str, List[Document]]
+
 
 class ContextualAnswerInput(TypedDict):
-    context: str
+    context: ContextType
     question: str
 
 
@@ -26,7 +29,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         arbitrary_types_allowed = True
 
     @property
-    def InputType(self) -> TypeAlias:
+    def InputType(self) -> Type[ContextualAnswerInput]:
         """Get the input type for this runnable."""
         return ContextualAnswerInput
 
@@ -35,7 +38,7 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         """Get the input type for this runnable."""
         return str
 
-    def _convert_input(self, input: ContextualAnswerInput) -> ContextualAnswerInput:
+    def _extract_context_and_question(self, input: ContextualAnswerInput) -> Tuple[str, ContextType]:
         context = input.get("context")
         question = input.get("question")
 
@@ -44,20 +47,25 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
                 f"Input must contain a 'context' and 'question' fields. Got {input}"
             )
 
+        if not isinstance(context, list) or not isinstance(context, str):
+            raise ValueError(
+                f"Expected input to be a list of strings or Documents."
+                f" Received {type(input)}"
+            )
+
+        return context, question
+
+    def _convert_input(self, input: ContextualAnswerInput) -> ContextualAnswerInput:
+        context, question = self._extract_context_and_question(input)
+
         if isinstance(context, list):
             docs = [
                 item.page_content if isinstance(item, Document) else item
                 for item in context
             ]
-            return {"context": "\n".join(docs), "question": input["question"]}
+            return {"context": "\n".join(docs), "question": question}
 
-        if isinstance(context, str):
-            return input
-
-        raise ValueError(
-            f"Expected input to be a list of strings or Documents."
-            f" Received {type(input)}"
-        )
+        return input
 
     def _call_contextual_answers_model(self, input: ContextualAnswerInput) -> str:
         converted_input = self._convert_input(input)
