@@ -1,4 +1,3 @@
-from langchain_core.globals import set_verbose
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import Runnable
 
