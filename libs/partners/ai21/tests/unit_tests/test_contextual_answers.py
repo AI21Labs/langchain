@@ -38,7 +38,7 @@ def test_invoke__on_bad_input(
 
     assert (
         error.value.args[0]
-        == f"Input must contain a 'context' and 'question' field. Got {input}"
+        == f"Input must contain a 'context' and 'question' fields. Got {input}"
     )
 
 
