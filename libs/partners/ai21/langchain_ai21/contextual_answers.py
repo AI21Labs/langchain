@@ -97,12 +97,12 @@ class AI21ContextualAnswers(RunnableSerializable[ContextualAnswerInput, str], AI
         return context, question
 
     def _parse_context(self, context: ContextType) -> str:
-        if isinstance(context, list):
-            docs = [
-                item.page_content if isinstance(item, Document) else item
-                for item in context
-            ]
+        if isinstance(context, str):
+            return context
 
-            return "\n".join(docs)
+        docs = [
+            item.page_content if isinstance(item, Document) else item
+            for item in context
+        ]
 
-        return context
+        return "\n".join(docs)
